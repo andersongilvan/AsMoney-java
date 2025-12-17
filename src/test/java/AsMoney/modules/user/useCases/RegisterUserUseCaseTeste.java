@@ -14,8 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +43,6 @@ public class RegisterUserUseCaseTeste {
 
         assertThrows(UserAlreadyExistsException.class,
                 () -> registerUserUseCase.execute(user));
-
     }
 
     @Test
@@ -66,6 +64,29 @@ public class RegisterUserUseCaseTeste {
         User savedUser = registerUserUseCase.execute(user);
 
         assertNotEquals("123456", savedUser.getPassword());
+    }
+
+    @Test
+    @DisplayName("should be able save a user")
+    public void shouldBeAbleSaveUser() {
+
+        User user = new User();
+        user.setEmail("teste@teste.com");
+        user.setPassword("123456");
+
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.empty());
+
+        when(passwordEncoder.encode(user.getPassword()))
+                .thenReturn("Password hashed");
+
+        when(userRepository.save(any(User.class)))
+                .thenReturn(user);
+
+        User savedUser = registerUserUseCase.execute(user);
+
+        assertNotNull(savedUser);
+
     }
 
 }
