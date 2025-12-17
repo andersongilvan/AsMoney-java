@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: AsMoney
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_as_money
+    username: admin
+    password: docker
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+
+  flyway:
+    enabled: true
+
+
