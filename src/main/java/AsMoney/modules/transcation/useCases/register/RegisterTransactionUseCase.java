@@ -21,7 +21,6 @@ public class RegisterTransactionUseCase {
         this.findUserByIdUseCase = findUserByIdUseCase;
     }
 
-
     public Transaction execute(Transaction transaction) {
 
         User user = findUserByIdUseCase.execute(transaction.getUser().getId());
