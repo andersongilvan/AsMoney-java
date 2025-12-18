@@ -1,6 +1,7 @@
 package AsMoney.modules.transcation.useCases.findById;
 
 import AsMoney.modules.transcation.entiry.Transaction;
+import AsMoney.modules.transcation.exceptions.TransactionNotFoundException;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,5 +50,18 @@ class FindTransactionByIdUseCaseTest {
         Assertions.assertEquals(idTransaction, result.getId());
 
         verify(repository).findById(idTransaction);
+    }
+
+    @Test
+    @DisplayName("should not be able find a transaction with wrong id")
+    void shouldNotBeableFindTransactionWithWrongId() {
+
+        when(repository.findById(idTransaction)).thenReturn(Optional.empty());
+        
+        Assertions.assertThrows(TransactionNotFoundException.class,
+                () -> useCase.execute(idTransaction));
+
+        verify(repository).findById(idTransaction);
+
     }
 }
