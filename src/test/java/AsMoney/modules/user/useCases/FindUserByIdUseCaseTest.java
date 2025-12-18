@@ -1,6 +1,7 @@
 package AsMoney.modules.user.useCases;
 
 
+import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.exceptions.UserNotFoudException;
 import AsMoney.modules.user.repository.UserRepository;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
@@ -15,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -38,5 +40,25 @@ public class FindUserByIdUseCaseTest {
 
         Assertions.assertThrows(UserNotFoudException.class,
                 () -> useCase.execute(wrongId));
+    }
+
+    @Test
+    @DisplayName("should be able find a user by id")
+    public void shouldBeableFindUserById() {
+
+        var id = UUID.randomUUID();
+
+        User user = new User();
+        user.setId(id);
+
+        when(repository.findById(id))
+                .thenReturn(Optional.of(user));
+
+        User result = useCase.execute(id);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(id, result.getId());
+
+        verify(repository).findById(id);
     }
 }
