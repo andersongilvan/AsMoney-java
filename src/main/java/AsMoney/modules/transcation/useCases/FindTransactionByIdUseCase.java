@@ -1,4 +1,4 @@
-package AsMoney.modules.transcation.useCases.findById;
+package AsMoney.modules.transcation.useCases;
 
 
 import AsMoney.modules.transcation.entiry.Transaction;
