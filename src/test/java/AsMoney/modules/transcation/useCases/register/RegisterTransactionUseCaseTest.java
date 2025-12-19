@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Register Transaction use-case")
 class RegisterTransactionUseCaseTest {
 
     @Mock
@@ -45,7 +47,7 @@ class RegisterTransactionUseCaseTest {
 
         transaction = new Transaction();
         transaction.setUser(user);
-        transaction.setAmount(100.0);
+        transaction.setAmount(BigDecimal.valueOf(100));
 
     }
 
