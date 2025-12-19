@@ -1,0 +1,5 @@
+ALTER TABLE transactions
+ALTER COLUMN amount TYPE DECIMAL(19, 2);
+
+ALTER TABLE transactions
+ALTER COLUMN amount SET NOT NULL;

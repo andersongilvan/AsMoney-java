@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,7 +30,8 @@ public class Transaction {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private double amount;
+    @Column(precision = 19, scale = 2, nullable = false)
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     private AmountType type;
