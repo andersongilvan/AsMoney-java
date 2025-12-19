@@ -3,6 +3,7 @@ package AsMoney.modules.transcation.useCases;
 import AsMoney.modules.transcation.enums.AmountType;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
+import AsMoney.modules.user.exceptions.UserNotFoudException;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Get total CREDIT or DEBIT use-case")
@@ -44,6 +44,20 @@ class GetTotalCreditOrDebitUseCaseTest {
     }
 
     @Test
+    @DisplayName("should not be able get total amount if user not found")
+    void shouldNotBeableGetTotalAmountIfUserNotFound() {
+
+        when(findUserByIdUseCase.execute(userId)).thenReturn(null);
+
+        Assertions.assertThrows(UserNotFoudException.class,
+                () -> useCase.execute(userId, type));
+
+        verify(findUserByIdUseCase).execute(userId);
+        verify(repository, never()).findByType(any(), any());
+
+    }
+
+    @Test
     @DisplayName("should be able get total amount for credit")
     void shouldBeAbleGetTotalAmountCredit() {
 
@@ -60,4 +74,5 @@ class GetTotalCreditOrDebitUseCaseTest {
         verify(findUserByIdUseCase).execute(userId);
         verify(repository).findByType(user.getId(), type);
     }
+
 }
