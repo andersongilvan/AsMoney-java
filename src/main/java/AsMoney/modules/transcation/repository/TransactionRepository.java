@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -36,6 +37,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
     @Query("""
             SELECT COALESCE(SUM(t.amount), 0.0) 
             FROM Transaction t
+            WERE t.user.id = :userId
             """)
-    BigDecimal sumAmount();
+    BigDecimal sumAmount(@Param("userId") UUID userId);
 }

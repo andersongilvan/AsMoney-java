@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormatSymbols;
 import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
@@ -56,13 +57,14 @@ class RegisterTransactionUseCaseTest {
     void shouldBeAbleCreateCreditTransaction() {
 
         transaction.setType(AmountType.CREDIT);
+        transaction.setAmount(new BigDecimal(100));
 
         when(findUserByIdUseCase.execute(userId)).thenReturn(user);
         when(repository.save(transaction)).thenReturn(transaction);
 
         Transaction result = useCase.execute(transaction);
 
-        Assertions.assertEquals(100.0, result.getAmount());
+        Assertions.assertEquals(result.getAmount(), BigDecimal.valueOf(100));
         Assertions.assertEquals(user, result.getUser());
 
         verify(findUserByIdUseCase).execute(userId);
@@ -75,13 +77,14 @@ class RegisterTransactionUseCaseTest {
     void shouldBeAbleCreateDebitTransaction() {
 
         transaction.setType(AmountType.DEBIT);
+        transaction.setAmount(new BigDecimal(100));
 
         when(findUserByIdUseCase.execute(userId)).thenReturn(user);
         when(repository.save(transaction)).thenReturn(transaction);
 
         Transaction resul = useCase.execute(transaction);
 
-        Assertions.assertEquals(-100.0, resul.getAmount());
+        Assertions.assertEquals(resul.getAmount(), BigDecimal.valueOf(100).negate());
         Assertions.assertEquals(user, resul.getUser());
 
         verify(findUserByIdUseCase).execute(userId);
