@@ -3,6 +3,7 @@ package AsMoney.modules.transcation.useCases.register;
 import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.enums.AmountType;
 import AsMoney.modules.transcation.repository.TransactionRepository;
+import AsMoney.modules.transcation.useCases.RegisterTransactionUseCase;
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
 import org.junit.jupiter.api.Assertions;

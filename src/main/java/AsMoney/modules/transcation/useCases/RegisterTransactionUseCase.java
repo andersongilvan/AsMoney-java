@@ -1,4 +1,4 @@
-package AsMoney.modules.transcation.useCases.register;
+package AsMoney.modules.transcation.useCases;
 
 
 import AsMoney.modules.transcation.entiry.Transaction;

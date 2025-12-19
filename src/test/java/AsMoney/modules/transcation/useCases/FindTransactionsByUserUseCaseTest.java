@@ -4,6 +4,7 @@ import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,9 @@ class FindTransactionsByUserUseCaseTest {
                 .thenReturn(List.of(new Transaction()));
 
         List<Transaction> result = useCase.execute(userId);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.size());
 
         verify(findUserByIdUseCase).execute(userId);
         verify(repository).findByUser(userId);
