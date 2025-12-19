@@ -3,6 +3,7 @@ package AsMoney.modules.transcation.useCases.findById;
 import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.exceptions.TransactionNotFoundException;
 import AsMoney.modules.transcation.repository.TransactionRepository;
+import AsMoney.modules.transcation.useCases.FindTransactionByIdUseCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,11 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.util.Assert;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +48,7 @@ class FindTransactionByIdUseCaseTest {
 
         Transaction result = useCase.execute(idTransaction);
 
+        Assertions.assertNotNull(result);
         Assertions.assertEquals(idTransaction, result.getId());
 
         verify(repository).findById(idTransaction);
