@@ -2,7 +2,7 @@ package AsMoney.modules.user.useCases.findById;
 
 
 import AsMoney.modules.user.entity.User;
-import AsMoney.modules.user.exceptions.UserNotFoudException;
+import AsMoney.modules.user.exceptions.UserNotFoundException;
 import AsMoney.modules.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,6 @@ public class FindUserByIdUseCase {
 
     public User execute(UUID idUser) {
         return userRepository.findById(idUser)
-                .orElseThrow(UserNotFoudException::new);
+                .orElseThrow(UserNotFoundException::new);
     }
 }

@@ -2,7 +2,6 @@ package AsMoney.modules.user.useCases.register;
 
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.exceptions.UserAlreadyExistsException;
-import AsMoney.modules.user.exceptions.UserNotFoudException;
 import AsMoney.modules.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

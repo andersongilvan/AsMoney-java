@@ -4,7 +4,7 @@ package AsMoney.modules.transcation.useCases;
 import AsMoney.modules.transcation.enums.AmountType;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
-import AsMoney.modules.user.exceptions.UserNotFoudException;
+import AsMoney.modules.user.exceptions.UserNotFoundException;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class GetTotalCreditOrDebitUseCase {
 
         User user = findUserByIdUseCase.execute(userId);
         if (user == null) {
-            throw new UserNotFoudException();
+            throw new UserNotFoundException();
         }
 
         return transactionRepository.findByType(user.getId(), type);

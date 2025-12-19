@@ -2,8 +2,7 @@ package AsMoney.modules.transcation.useCases;
 
 
 import AsMoney.modules.transcation.repository.TransactionRepository;
-import AsMoney.modules.user.entity.User;
-import AsMoney.modules.user.exceptions.UserNotFoudException;
+import AsMoney.modules.user.exceptions.UserNotFoundException;
 import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class GetTotalAmountTransactionUseCase {
     public BigDecimal execute(UUID userId) {
 
          getUserOptionalByIdUseCase.execute(userId)
-                .orElseThrow(UserNotFoudException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         return transactionRepository.sumAmount(userId);
 

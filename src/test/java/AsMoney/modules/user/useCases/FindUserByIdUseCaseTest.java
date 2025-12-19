@@ -2,7 +2,7 @@ package AsMoney.modules.user.useCases;
 
 
 import AsMoney.modules.user.entity.User;
-import AsMoney.modules.user.exceptions.UserNotFoudException;
+import AsMoney.modules.user.exceptions.UserNotFoundException;
 import AsMoney.modules.user.repository.UserRepository;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +38,7 @@ public class FindUserByIdUseCaseTest {
         when(repository.findById(wrongId))
                 .thenReturn(Optional.empty());
 
-        Assertions.assertThrows(UserNotFoudException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> useCase.execute(wrongId));
     }
 

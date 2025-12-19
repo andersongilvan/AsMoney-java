@@ -2,6 +2,7 @@ package AsMoney.modules.transcation.useCases;
 
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
+import AsMoney.modules.user.exceptions.UserNotFoundException;
 import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +17,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Get total amount transactions use-case")
@@ -60,5 +60,18 @@ class GetTotalAmountTransactionUseCaseTest {
 
     }
 
+    @Test
+    @DisplayName("should not be able get total amount a transactions if user not found")
+    void shouldNotBeAbleGetSumAmountTransactionsUserNotFound() {
+
+        when(getUserOptionalByIdUseCase.execute(userId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(UserNotFoundException.class,
+                () -> useCase.execute(userId));
+
+        verify(getUserOptionalByIdUseCase).execute(userId);
+        verify(repository, never()).sumAmount(any());
+
+    }
 
 }
