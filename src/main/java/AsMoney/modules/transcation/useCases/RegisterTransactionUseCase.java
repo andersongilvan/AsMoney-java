@@ -25,8 +25,10 @@ public class RegisterTransactionUseCase {
 
         User user = findUserByIdUseCase.execute(transaction.getUser().getId());
 
-        transaction.setAmount(transaction.getType().equals(AmountType.CREDIT) ? transaction.getAmount()
-                : transaction.getAmount() * (-1));
+        transaction.setAmount(
+                transaction.getType().equals(AmountType.CREDIT)
+                        ? transaction.getAmount()
+                        : transaction.getAmount().negate());
 
         transaction.setUser(user);
 

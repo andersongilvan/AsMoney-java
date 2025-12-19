@@ -23,8 +23,6 @@ public class FindTransactionsByUserUseCase {
         this.findUserByIdUseCase = findUserByIdUseCase;
     }
 
-
-
     public List<Transaction> execute(UUID userId) {
 
         User user = findUserByIdUseCase.execute(userId);

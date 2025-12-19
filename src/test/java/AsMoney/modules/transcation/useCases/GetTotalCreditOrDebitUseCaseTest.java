@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,15 +65,37 @@ class GetTotalCreditOrDebitUseCaseTest {
         user.setId(userId);
 
         when(findUserByIdUseCase.execute(userId)).thenReturn(user);
-        when(repository.findByType(user.getId(), type)).thenReturn(1000.0);
+        when(repository.findByType(user.getId(), type)).thenReturn(BigDecimal.valueOf(10000));
 
-        double result = useCase.execute(user.getId(), type);
+        BigDecimal result = useCase.execute(user.getId(), type);
 
         Assertions.assertNotNull(user);
-        Assertions.assertEquals(result, 1000.0);
+        Assertions.assertEquals(result, BigDecimal.valueOf(10000));
+
 
         verify(findUserByIdUseCase).execute(userId);
         verify(repository).findByType(user.getId(), type);
+    }
+
+    @Test
+    @DisplayName("should be able get amount type DEBIT")
+    void shouldBeAbleGetAmountTypeDebit() {
+
+        type = AmountType.DEBIT;
+
+        user.setId(userId);
+
+        when(findUserByIdUseCase.execute(userId)).thenReturn(user);
+        when(repository.findByType(user.getId(), type)).thenReturn(BigDecimal.valueOf(10000).negate());
+
+        BigDecimal result = useCase.execute(user.getId(), type);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result, BigDecimal.valueOf(10000).negate());
+
+        verify(findUserByIdUseCase).execute(userId);
+        verify(repository).findByType(user.getId(), type);
+
     }
 
 }
