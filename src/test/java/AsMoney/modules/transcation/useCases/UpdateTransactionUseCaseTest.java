@@ -2,9 +2,9 @@ package AsMoney.modules.transcation.useCases;
 
 import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.exceptions.TransactionNotFoundException;
+import AsMoney.modules.transcation.exceptions.UnauthorizedTransactionAccessException;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
-import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,10 +26,6 @@ class UpdateTransactionUseCaseTest {
 
     @Mock
     TransactionRepository repository;
-
-    @Mock
-    GetUserOptionalByIdUseCase getUserOptionalByIdUseCase;
-
 
     @InjectMocks
     UpdateTransactionUseCase useCase;
@@ -83,6 +79,22 @@ class UpdateTransactionUseCaseTest {
 
         Assertions.assertThrows(TransactionNotFoundException.class,
                 () -> useCase.execute(userId, transactionId, transaction));
+
+        verify(repository).findById(transactionId);
+        verify(repository, never()).save(any());
+
+    }
+
+    @Test
+    @DisplayName("should not be able update a transaction with user unauthorized")
+    void shouldNorBeAbleUpdateTransactionWithUserUnauthorized() {
+
+        UUID userWrongId = UUID.randomUUID();
+
+        when(repository.findById(transactionId)).thenReturn(Optional.of(transaction));
+
+        Assertions.assertThrows(UnauthorizedTransactionAccessException.class,
+                () -> useCase.execute(userWrongId, transactionId, transaction));
 
         verify(repository).findById(transactionId);
         verify(repository, never()).save(any());
