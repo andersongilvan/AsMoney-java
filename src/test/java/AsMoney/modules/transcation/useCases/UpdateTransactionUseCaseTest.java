@@ -1,6 +1,7 @@
 package AsMoney.modules.transcation.useCases;
 
 import AsMoney.modules.transcation.entiry.Transaction;
+import AsMoney.modules.transcation.exceptions.TransactionNotFoundException;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
@@ -12,15 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tools.jackson.databind.ser.impl.UnknownSerializer;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -59,13 +57,13 @@ class UpdateTransactionUseCaseTest {
 
     @Test
     @DisplayName("should be able update transaction")
-    void execute() {
+    void shouldBeAbleUpdateTransaction() {
 
 
         when(repository.findById(transactionId)).thenReturn(Optional.of(transaction));
         when(repository.save(any(Transaction.class))).thenReturn(transaction);
 
-      Transaction updateData = new Transaction();
+        Transaction updateData = new Transaction();
         updateData.setTitle("Title updated");
 
         Transaction result = useCase.execute(userId, transactionId, updateData);
@@ -74,6 +72,20 @@ class UpdateTransactionUseCaseTest {
 
         verify(repository).findById(transactionId);
         verify(repository).save(transaction);
+
+    }
+
+    @Test
+    @DisplayName("should not be able update a transaction with id not found")
+    void shouldNotBeAbleUpdateTransactionWithIdNotFound() {
+
+        when(repository.findById(transactionId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(TransactionNotFoundException.class,
+                () -> useCase.execute(userId, transactionId, transaction));
+
+        verify(repository).findById(transactionId);
+        verify(repository, never()).save(any());
 
     }
 }
