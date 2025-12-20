@@ -37,7 +37,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
     @Query("""
             SELECT COALESCE(SUM(t.amount), 0.0) 
             FROM Transaction t
-            WERE t.user.id = :userId
+            WHERE t.user.id = :userId
             """)
     BigDecimal sumAmount(@Param("userId") UUID userId);
 }

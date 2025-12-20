@@ -8,6 +8,8 @@ import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 
 @Service
 public class RegisterTransactionUseCase {
