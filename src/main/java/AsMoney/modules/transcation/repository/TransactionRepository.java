@@ -40,4 +40,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             WHERE t.user.id = :userId
             """)
     BigDecimal sumAmount(@Param("userId") UUID userId);
+
+    @Query("""
+            DELETE FROM Transaction t
+            WHERE t.id = :transactionId
+            AND t.user.id = :userId
+            """)
+    void deleteById(@Param("transactionId") UUID transactionId, @Param("userId") UUID userId);
 }
