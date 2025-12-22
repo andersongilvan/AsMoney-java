@@ -7,7 +7,6 @@ import AsMoney.modules.transcation.exceptions.UnauthorizedTransactionAccessExcep
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,12 +14,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class GetTransactionsBetweenDates {
+public class GetTransactionsBetweenDatesUseCase {
 
     private final GetUserOptionalByIdUseCase getUserOptionalByIdUseCase;
     private final TransactionRepository transactionRepository;
 
-    public GetTransactionsBetweenDates(GetUserOptionalByIdUseCase getUserOptionalByIdUseCase, TransactionRepository transactionRepository) {
+    public GetTransactionsBetweenDatesUseCase(GetUserOptionalByIdUseCase getUserOptionalByIdUseCase, TransactionRepository transactionRepository) {
         this.getUserOptionalByIdUseCase = getUserOptionalByIdUseCase;
         this.transactionRepository = transactionRepository;
     }
