@@ -23,7 +23,7 @@ public class UpdateTransactionUseCase {
     public Transaction execute(UUID userId, UUID transactionId, Transaction transactionUpdate) {
 
         Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(TransactionNotFoundException::new);
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction not found"));
 
         if (!transaction.getUser().getId().equals(userId)) {
             throw new UnauthorizedTransactionAccessException();

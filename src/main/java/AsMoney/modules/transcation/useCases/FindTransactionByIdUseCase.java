@@ -19,6 +19,6 @@ public class FindTransactionByIdUseCase {
 
     public Transaction execute(UUID idTransaction) {
         return transactionRepository.findById(idTransaction)
-                .orElseThrow(TransactionNotFoundException::new);
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction not found"));
     }
 }
