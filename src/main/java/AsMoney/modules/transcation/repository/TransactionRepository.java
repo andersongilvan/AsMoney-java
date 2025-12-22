@@ -51,9 +51,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
 
     @Query("""
             SELECT t FROM Transaction t
-            WHERE t.createdAt >=  :startDate
-            AND t.createdAt < :endDate
-            AND t.user.id = :userId
+                WHERE t.createdAt >=  :startDate
+                    AND t.createdAt < :endDate
+                    AND t.user.id = :userId
             """)
     List<Transaction> findBetweenDates(
             @Param("startDate")
@@ -63,3 +63,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             @Param("userId")
             UUID userId);
 }
+
+
