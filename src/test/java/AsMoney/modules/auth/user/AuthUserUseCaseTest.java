@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -20,6 +21,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AuthUserUseCaseTest {
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @Mock
     UserRepository repository;
@@ -58,6 +62,25 @@ class AuthUserUseCaseTest {
                 () -> useCase.execute(userRequest));
 
         verify(repository).findByEmail(userRequest.email());
+        verify(tokenService, never()).generateToken(any());
+        verify(passwordEncoder, never()).matches(any(), any());
+
+    }
+
+    @Test
+    @DisplayName("should not be able auth user wrong password")
+    void shouldNotBeAbleAuthUserWithWrongPassword() {
+
+        user.setPassword(userRequest.password());
+
+        when(repository.findByEmail(userRequest.email())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(password, user.getPassword())).thenReturn(false);
+
+        assertThrows(UserNotFoundException.class,
+                () -> useCase.execute(userRequest));
+
+        verify(repository).findByEmail(userRequest.email());
+        verify(passwordEncoder).matches(userRequest.password(), user.getPassword());
         verify(tokenService, never()).generateToken(any());
 
     }
