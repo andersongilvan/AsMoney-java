@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -47,4 +47,19 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             AND t.user.id = :userId
             """)
     void deleteById(@Param("transactionId") UUID transactionId, @Param("userId") UUID userId);
+
+
+    @Query("""
+            SELECT t FROM Transaction t
+            WHERE t.createdAt >=  :startDate
+            AND t.createdAt < :endDate
+            AND t.user.id = :userId
+            """)
+    List<Transaction> findBetweenDates(
+            @Param("startDate")
+            LocalDateTime startDate,
+            @Param("endDate")
+            LocalDateTime endDate,
+            @Param("userId")
+            UUID userId);
 }
