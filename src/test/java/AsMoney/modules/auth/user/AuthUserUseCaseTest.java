@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -82,6 +83,28 @@ class AuthUserUseCaseTest {
         verify(repository).findByEmail(userRequest.email());
         verify(passwordEncoder).matches(userRequest.password(), user.getPassword());
         verify(tokenService, never()).generateToken(any());
+
+    }
+
+    @Test
+    @DisplayName("should be able generate token or user")
+    void shouldBeAbleGenerateTokenOfUser() {
+
+        user.setPassword(userRequest.password());
+        String tokenFake = "password-fake";
+
+        when(repository.findByEmail(userRequest.email())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(password, user.getPassword())).thenReturn(true);
+        when(tokenService.generateToken(user)).thenReturn(tokenFake);
+
+        String result = useCase.execute(userRequest);
+
+        assertNotNull(result);
+        assertEquals(result, tokenFake);
+
+        verify(repository).findByEmail(userRequest.email());
+        verify(passwordEncoder).matches(userRequest.password(), user.getPassword());
+        verify(tokenService).generateToken(user);
 
     }
 }
