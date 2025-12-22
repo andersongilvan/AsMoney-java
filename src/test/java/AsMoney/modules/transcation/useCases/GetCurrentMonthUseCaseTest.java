@@ -1,6 +1,8 @@
 package AsMoney.modules.transcation.useCases;
 
+import AsMoney.modules.transcation.dto.DashboardResponse;
 import AsMoney.modules.transcation.entiry.Transaction;
+import AsMoney.modules.transcation.enums.AmountType;
 import AsMoney.modules.transcation.exceptions.UnauthorizedTransactionAccessException;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
@@ -13,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.management.DescriptorKey;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,30 +46,51 @@ class GetCurrentMonthUseCaseTest {
         userId = UUID.randomUUID();
     }
 
+
     @Test
-    @DisplayName("should not be able fetch transactions if user not exist")
-    void shouldNotBeAbleFetchTransactionsIfUserNotExist() {
+    @DisplayName("should be able return DashboardResponse data")
+    void shouldBeAbleReturnDashboardResponseData() {
 
-        when(getUserOptionalByIdUseCase.execute(userId)).thenThrow(UnauthorizedTransactionAccessException.class);
+        when(getUserOptionalByIdUseCase.execute(userId)).thenReturn(Optional.of(new User()));
 
-        assertThrows(UnauthorizedTransactionAccessException.class,
-                () -> useCase.execute(userId));
+        when(repository.findBetweenDates(any(), any(), eq(userId))).thenReturn(List.of(new Transaction()));
 
-        verify(repository, never()).findBetweenDates(any(), any(), any());
+        when(repository.findTotalAmount(eq(AmountType.CREDIT), any(), any(), eq(userId)))
+                .thenReturn(BigDecimal.valueOf(100));
+
+        when(repository.findTotalAmount(eq(AmountType.DEBIT), any(), any(), eq(userId)))
+                .thenReturn(BigDecimal.valueOf(40));
+
+        when(repository.findByType(eq(userId), eq(AmountType.CREDIT)))
+                .thenReturn(BigDecimal.valueOf(500));
+
+
+        DashboardResponse dashboardResponse = useCase.execute(userId);
+
+        assertNotNull(dashboardResponse);
+        assertEquals(BigDecimal.valueOf(100), dashboardResponse.totalIncome());
+        assertEquals(BigDecimal.valueOf(40), dashboardResponse.totalExpense());
+
+        verify(getUserOptionalByIdUseCase).execute(userId);
+        verify(repository).findBetweenDates(any(), any(), eq(userId));
+        verify(repository).findTotalAmount(eq(AmountType.CREDIT), any(), any(), eq(userId));
+        verify(repository).findTotalAmount(eq(AmountType.DEBIT), any(), any(), eq(userId));
+        verify(repository).findByType(eq(userId), eq(AmountType.CREDIT));
 
     }
 
     @Test
-    @DisplayName("should be able fetch transactions from current month")
-    void shouldBeAbleFetchTransactionsFromCurrentMonth() {
+    @DisplayName("should throw exception when user not exist")
+    void shouldThrowExceptionWhenUserNotExist() {
 
-        when(getUserOptionalByIdUseCase.execute(userId)).thenReturn(Optional.of(new User()));
-        when(repository.findBetweenDates(any(), any(), eq(userId))).thenReturn(List.of(new Transaction()));
+        when(getUserOptionalByIdUseCase.execute(userId)).thenReturn(Optional.empty());
 
-        useCase.execute(userId);
+        assertThrows(UnauthorizedTransactionAccessException.class,
+                () -> useCase.execute(userId));
 
         verify(getUserOptionalByIdUseCase).execute(userId);
-        verify(repository).findBetweenDates(any(), any(), eq(userId));
+        verify(repository, never()).findBetweenDates(any(), any(), any());
+        verify(repository, never()).findTotalAmount(any(), any(), any(), any());
 
     }
 }

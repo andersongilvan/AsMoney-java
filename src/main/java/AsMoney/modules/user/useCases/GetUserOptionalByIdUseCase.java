@@ -1,6 +1,7 @@
 package AsMoney.modules.user.useCases;
 
 
+import AsMoney.modules.transcation.exceptions.UnauthorizedTransactionAccessException;
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.exceptions.UserNotFoundException;
 import AsMoney.modules.user.repository.UserRepository;
@@ -19,7 +20,6 @@ public class GetUserOptionalByIdUseCase {
     }
 
     public Optional<User> execute(UUID userId) {
-        return Optional.of(userRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::new));
+        return userRepository.findById(userId);
     }
 }

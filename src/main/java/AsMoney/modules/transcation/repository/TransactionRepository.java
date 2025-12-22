@@ -24,7 +24,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
     List<Transaction> findByUser(@Param("userId") UUID userId);
 
     @Query("""
-            SELECT COALESCE(SUM(t.amount), 0.0)
+            SELECT COALESCE(SUM(t.amount), 0)
             FROM Transaction t
             WHERE t.type = :type
             AND t.user.id = :userId
@@ -35,7 +35,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
     );
 
     @Query("""
-            SELECT COALESCE(SUM(t.amount), 0.0) 
+            SELECT COALESCE(SUM(t.amount), 0) 
             FROM Transaction t
             WHERE t.user.id = :userId
             """)
@@ -62,6 +62,21 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             LocalDateTime endDate,
             @Param("userId")
             UUID userId);
+
+
+    @Query("""
+            SELECT COALESCE(SUM(t.amount), 0)
+                FROM Transaction t
+                WHERE t.type = :amountType
+                AND t.createdAt >= :start
+                AND t.createdAt < :end
+                AND t.user.id = :userId
+            """)
+    BigDecimal findTotalAmount(
+            @Param("amountType") AmountType amountType,
+            @Param("start")LocalDateTime start,
+            @Param("end")LocalDateTime end,
+            @Param("userId")UUID userId);
 }
 
 
