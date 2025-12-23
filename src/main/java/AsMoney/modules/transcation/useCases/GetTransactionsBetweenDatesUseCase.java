@@ -3,6 +3,7 @@ package AsMoney.modules.transcation.useCases;
 
 import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.exceptions.TransactionNotFoundException;
+import AsMoney.modules.transcation.exceptions.UnauthorizedTransactionAccessException;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ public class GetTransactionsBetweenDatesUseCase {
 
     public List<Transaction> execute(LocalDate startDate, LocalDate endDate, UUID userId) {
 
-        getUserOptionalByIdUseCase.execute(userId);
+        getUserOptionalByIdUseCase.execute(userId)
+                .orElseThrow(UnauthorizedTransactionAccessException::new);
 
         LocalDateTime start = startDate.atStartOfDay();
         LocalDateTime end = endDate.plusDays(1).atStartOfDay();
