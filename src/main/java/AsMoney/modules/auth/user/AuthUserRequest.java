@@ -1,4 +1,7 @@
 package AsMoney.modules.auth.user;
 
-public record AuthUserRequest() {
+public record AuthUserRequest(
+        String email,
+        String password
+) {
 }
