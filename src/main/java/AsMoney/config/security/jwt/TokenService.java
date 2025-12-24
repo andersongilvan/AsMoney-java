@@ -46,7 +46,7 @@ public class TokenService {
             String subject = jwt.getSubject();
             String name = jwt.getClaim("name").toString();
 
-            return new TokenData(name, subject);
+            return new TokenData(subject, name);
 
 
         } catch (JWTVerificationException ex) {

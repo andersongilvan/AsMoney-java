@@ -2,6 +2,7 @@ package AsMoney.modules.auth.user;
 
 
 import AsMoney.config.security.jwt.TokenService;
+import AsMoney.modules.auth.user.mapper.AuthUserMapper;
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.exceptions.UserNotFoundException;
 import AsMoney.modules.user.repository.UserRepository;
@@ -21,7 +22,9 @@ public class AuthUserUseCase {
         this.tokenService = tokenService;
     }
 
-    public String execute(AuthUserRequest userRequest) {
+    public AuthUserResponse execute(AuthUserRequest userRequest) {
+
+        System.out.println("user request: " + userRequest);
 
         User user = userRepository.findByEmail(userRequest.email())
                 .orElseThrow(UserNotFoundException::new);
@@ -34,7 +37,9 @@ public class AuthUserUseCase {
 
         String token = tokenService.generateToken(user);
 
-        return token;
+        AuthUserResponse authUserresponse = AuthUserMapper.toAuthUserresponse(token, user);
+
+        return authUserresponse;
 
     }
 }

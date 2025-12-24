@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -40,6 +39,7 @@ public class Transaction {
     @Column(precision = 19, scale = 2, nullable = false)
     private BigDecimal amount;
 
+    @Column(name = "amount_type")
     @Enumerated(EnumType.STRING)
     private AmountType type;
 

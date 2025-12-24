@@ -6,26 +6,21 @@ import AsMoney.modules.transcation.enums.AmountType;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-
+@RequiredArgsConstructor
 @Service
 public class RegisterTransactionUseCase {
 
     private final TransactionRepository transactionRepository;
-
     private final FindUserByIdUseCase findUserByIdUseCase;
-
-    public RegisterTransactionUseCase(TransactionRepository transactionRepository, FindUserByIdUseCase findUserByIdUseCase) {
-        this.transactionRepository = transactionRepository;
-        this.findUserByIdUseCase = findUserByIdUseCase;
-    }
 
     public Transaction execute(Transaction transaction) {
 
-        User user = findUserByIdUseCase.execute(transaction.getUser().getId());
+        User user = this.findUserByIdUseCase.execute(transaction.getUser().getId());
 
         transaction.setAmount(
                 transaction.getType().equals(AmountType.CREDIT)
@@ -34,6 +29,6 @@ public class RegisterTransactionUseCase {
 
         transaction.setUser(user);
 
-        return transactionRepository.save(transaction);
+        return this.transactionRepository.save(transaction);
     }
 }

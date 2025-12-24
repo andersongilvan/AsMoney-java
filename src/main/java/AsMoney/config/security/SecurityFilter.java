@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -16,24 +17,23 @@ import java.io.IOException;
 import java.util.Collections;
 
 
+@RequiredArgsConstructor
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
 
-    public SecurityFilter(TokenService tokenService) {
-        this.tokenService = tokenService;
-    }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+
         String path = request.getServletPath();
 
         return path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs")
                 || path.startsWith("/swagger-resources")
                 || path.equals("/asmoney/login")
-                || path.equals("asmoney/auth");
+                || path.equals("/asmoney/auth");
     }
 
 

@@ -23,8 +23,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.POST, "asmoney/login").permitAll()
-                            .requestMatchers(HttpMethod.POST, "asmoney/auth").permitAll()
+                    auth.requestMatchers(HttpMethod.POST, "/asmoney/login").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/asmoney/auth").permitAll()
                             .requestMatchers("/swagger-ui**", "/v3/api-docs**", "/swagger-resources**")
                             .permitAll();
 

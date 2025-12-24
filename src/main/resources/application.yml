@@ -16,4 +16,4 @@ spring:
     enabled: true
 
   jwt :
-    SECRET_KEY : #?wDco~ONPTM$@;P))KbO3"O7Ft[tH
+    SECRET_KEY : "#?wDco~ONPTM;$@P))KbO3O7Ft[tH"
