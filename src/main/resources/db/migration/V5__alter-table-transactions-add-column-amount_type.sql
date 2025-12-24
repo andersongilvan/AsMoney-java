@@ -1,0 +1,1 @@
+ALTER TABLE transactions ADD COLUMN amount_type VARCHAR(50) NOT NULL;
