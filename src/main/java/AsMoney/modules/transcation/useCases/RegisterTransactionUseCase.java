@@ -6,6 +6,7 @@ import AsMoney.modules.transcation.enums.AmountType;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.entity.User;
 import AsMoney.modules.user.useCases.findById.FindUserByIdUseCase;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class RegisterTransactionUseCase {
     private final TransactionRepository transactionRepository;
     private final FindUserByIdUseCase findUserByIdUseCase;
 
+    @Transactional
     public Transaction execute(Transaction transaction) {
 
         User user = this.findUserByIdUseCase.execute(transaction.getUser().getId());

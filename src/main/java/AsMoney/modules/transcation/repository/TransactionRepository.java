@@ -3,6 +3,7 @@ package AsMoney.modules.transcation.repository;
 import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.enums.AmountType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -10,10 +11,20 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
+
+
+    @Query("""
+            SELECT t
+            FROM Transaction t
+            WHERE t.id = :transactionId
+            AND t.user.id = :userId
+            """)
+    Optional<Transaction> findByIdAndUserId(@Param("transactionId") UUID transactionId, @Param("userId") UUID userId);
 
     @Query("""
             SELECT t 
@@ -41,19 +52,22 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             """)
     BigDecimal sumAmount(@Param("userId") UUID userId);
 
+    @Modifying
     @Query("""
             DELETE FROM Transaction t
             WHERE t.id = :transactionId
             AND t.user.id = :userId
             """)
-    void deleteById(@Param("transactionId") UUID transactionId, @Param("userId") UUID userId);
+    void deleteByIdWhereUser(@Param("transactionId") UUID transactionId, @Param("userId") UUID userId);
 
 
     @Query("""
-            SELECT t FROM Transaction t
+            SELECT t
+             FROM Transaction t
                 WHERE t.createdAt >=  :startDate
                     AND t.createdAt < :endDate
                     AND t.user.id = :userId
+                    ORDER BY t.createdAt DESC
             """)
     List<Transaction> findBetweenDates(
             @Param("startDate")
@@ -74,9 +88,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             """)
     BigDecimal findTotalAmount(
             @Param("amountType") AmountType amountType,
-            @Param("start")LocalDateTime start,
-            @Param("end")LocalDateTime end,
-            @Param("userId")UUID userId);
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("userId") UUID userId);
 }
 
 

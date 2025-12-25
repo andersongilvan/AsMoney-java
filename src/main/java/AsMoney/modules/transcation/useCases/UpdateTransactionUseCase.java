@@ -4,8 +4,7 @@ import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.exceptions.TransactionNotFoundException;
 import AsMoney.modules.transcation.exceptions.UnauthorizedTransactionAccessException;
 import AsMoney.modules.transcation.repository.TransactionRepository;
-import AsMoney.modules.user.exceptions.UserNotFoundException;
-import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -20,12 +19,13 @@ public class UpdateTransactionUseCase {
         this.transactionRepository = transactionRepository;
     }
 
-    public Transaction execute(UUID userId, UUID transactionId, Transaction transactionUpdate) {
+    @Transactional
+    public Transaction execute(UUID transactionId, Transaction transactionUpdate) {
 
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new TransactionNotFoundException("Transaction not found"));
 
-        if (!transaction.getUser().getId().equals(userId)) {
+        if (!transaction.getUser().getId().equals(transactionUpdate.getUser().getId())) {
             throw new UnauthorizedTransactionAccessException();
         }
 

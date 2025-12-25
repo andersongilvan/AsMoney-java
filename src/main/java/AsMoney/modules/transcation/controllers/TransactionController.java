@@ -28,8 +28,8 @@ public class TransactionController {
     private final FindTransactionsByUserUseCase findByUser;
     private final FindTransactionByIdUseCase findById;
     private final GetCurrentMonthUseCase getCurrentMonth;
-    private final GetTotalAmountTransactionUseCase getTotalAmount;
-    private final GetTotalCreditOrDebitUseCase getTotalCreditOrDebit;
+    //private final GetTotalAmountTransactionUseCase getTotalAmount;
+    // private final GetTotalCreditOrDebitUseCase getTotalCreditOrDebit;
     private final GetTransactionsBetweenDatesUseCase getTransactionsBetweenDates;
     private final UpdateTransactionUseCase update;
     private final DeleteTransactionUseCase delete;
@@ -39,9 +39,7 @@ public class TransactionController {
     public ResponseEntity<Object> create(@AuthenticationPrincipal TokenData tokenData,
                                          @Valid @RequestBody TransactionRequestDto requestDto) {
 
-        String sub = tokenData.id();
-
-        UUID userId = UUID.fromString(sub);
+        UUID userId = UUID.fromString(tokenData.id());
 
         Transaction transaction = TransactionMapper.toTransaction(requestDto, userId);
 
@@ -54,14 +52,12 @@ public class TransactionController {
 
     }
 
-    @GetMapping
+    @GetMapping("/dashboard")
     public ResponseEntity<Object> index(@AuthenticationPrincipal TokenData tokenData,
                                         @RequestParam(required = false) LocalDate startDate,
                                         @RequestParam(required = false) LocalDate endDate) {
 
-        String sub = tokenData.id();
-
-        UUID userId = UUID.fromString(sub);
+        UUID userId = UUID.fromString(tokenData.id());
 
         if (startDate == null || endDate == null) {
             DashboardResponse dashboardResponse = this.getCurrentMonth.execute(userId);
@@ -75,6 +71,58 @@ public class TransactionController {
                 .map(t -> TransactionMapper.toTransactionResponse(t)).toList();
 
         return ResponseEntity.ok(transactionsResponses);
+
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Object> getByUser(@AuthenticationPrincipal TokenData tokenData) {
+
+        UUID userId = UUID.fromString(tokenData.id());
+
+        List<Transaction> result = this.findByUser.execute(userId);
+
+        List<TransactionsResponse> transactionsResponses = result.stream()
+                .map(t -> TransactionMapper.toTransactionResponse(t)).toList();
+
+        return ResponseEntity.ok(transactionsResponses);
+    }
+
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<Object> findById(@AuthenticationPrincipal TokenData tokenData,
+                                           @PathVariable UUID transactionId) {
+
+        UUID userId = UUID.fromString(tokenData.id());
+
+        Transaction result = this.findById.execute(transactionId, userId);
+
+        return ResponseEntity.ok(TransactionMapper.toTransactionResponse(result));
+
+    }
+
+    @PutMapping("/{transactionId}")
+    public ResponseEntity<Object> update(@AuthenticationPrincipal TokenData tokenData,
+                                         @PathVariable UUID transactionId,
+                                         @Valid @RequestBody TransactionRequestDto updated) {
+
+        UUID userId = UUID.fromString(tokenData.id());
+
+        Transaction transaction = TransactionMapper.toTransaction(updated, userId);
+
+        Transaction result = this.update.execute(transactionId, transaction);
+
+        return ResponseEntity.ok(TransactionMapper.toTransactionResponse(result));
+
+    }
+
+    @DeleteMapping("/{transactionId}")
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal TokenData tokenData,
+                                       @PathVariable UUID transactionId) {
+
+        UUID userId = UUID.fromString(tokenData.id());
+
+        this.delete.execute(transactionId, userId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
 
