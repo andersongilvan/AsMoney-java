@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.POST, "/asmoney/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/asmoney/auth").permitAll()
-                            .requestMatchers("/swagger-ui**", "/v3/api-docs**", "/swagger-resources**")
+                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**")
                             .permitAll();
 
                     auth.anyRequest().authenticated();
