@@ -8,6 +8,12 @@ import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.mapper.TransactionMapper;
 import AsMoney.modules.transcation.useCases.GetCurrentMonthUseCase;
 import AsMoney.modules.transcation.useCases.GetTransactionsBetweenDatesUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +35,48 @@ public class Index {
     private final GetTransactionsBetweenDatesUseCase getTransactionsBetweenDates;
 
     @GetMapping("/dashboard")
+
+    @Operation(summary = "User dashboard",
+            description = "Return dashboard of current month when not dates" +
+                    "When startDate and endDate specified, it return transactions for period."
+    )
+
+    @SecurityRequirement(name = "BearerAuth")
+
+    @ApiResponse(
+            responseCode = "200",
+            description = "OK",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(
+                            oneOf = {
+                                    DashboardResponse.class,
+                                    TransactionsResponse[].class
+                            }
+                    )
+            )
+    )
+
+    @ApiResponse(
+            responseCode = "401",
+            description = "Token not found"
+    )
+
+    @ApiResponse(
+            responseCode = "401",
+            description = "Invalid or expired token"
+    )
+
+    @Parameter(
+            description = "Start date of period, format: (yyyy-MM-dd). Optional",
+            example = "2025-02-01"
+    )
+
+    @Parameter(
+            description = "End date of period, format: (yyyy-MM-dd). Optional",
+            example = "2025-02-01"
+    )
+
     public ResponseEntity<Object> index(@AuthenticationPrincipal TokenData tokenData,
                                         @RequestParam(required = false) LocalDate startDate,
                                         @RequestParam(required = false) LocalDate endDate) {
