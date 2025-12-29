@@ -36,7 +36,7 @@ public class TransactionController {
 
 
     private final UpdateTransactionUseCase update;
-    private final DeleteTransactionUseCase delete;
+
 
 
 
@@ -56,16 +56,6 @@ public class TransactionController {
 
     }
 
-    @DeleteMapping("/{transactionId}")
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal TokenData tokenData,
-                                       @PathVariable UUID transactionId) {
 
-        UUID userId = UUID.fromString(tokenData.id());
-
-        this.delete.execute(transactionId, userId);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
-    }
 
 }

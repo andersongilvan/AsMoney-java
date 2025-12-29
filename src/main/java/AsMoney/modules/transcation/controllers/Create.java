@@ -42,9 +42,11 @@ public class Create {
             description =
                     "## Return Flow\n" +
                             "Returns the details of a specific transaction.\n" +
+                            "### Success:" +
                             "\n**201:** Created\n" +
-                            "\nReturns the details of a specific transaction.\n" +
-                            "Possible Errors:\n\n" +
+                            "\n" +
+                            "### Possible Errors:" +
+                            "\n" +
                             "**401**: Missing or invalid token.\n" +
                             "\n" +
                             "**403**: Forbidden")
@@ -53,8 +55,9 @@ public class Create {
     @ApiResponses(value = {
 
             @ApiResponse(responseCode = "201",
-                    description = "CREATED",
-                    content = @Content(schema = @Schema(implementation = TransactionsResponse.class))),
+                    description = "Created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TransactionsResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid data",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ValidationErrors.class))),
@@ -67,7 +70,7 @@ public class Create {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Unauthorized.class))),
     })
-    public ResponseEntity<TransactionsResponse> create(@AuthenticationPrincipal TokenData tokenData,
+    public ResponseEntity<TransactionsResponse> handler(@AuthenticationPrincipal TokenData tokenData,
                                                        @Valid @RequestBody TransactionRequestDto requestDto) {
 
         UUID userId = UUID.fromString(tokenData.id());

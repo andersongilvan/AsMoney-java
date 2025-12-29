@@ -39,8 +39,8 @@ public class GetById {
                     "## Return Flow\n" +
                             "Returns the details of a specific transaction.\n" +
                             "\n**200:** Ok\n" +
-                            "\nReturns the details of a specific transaction.\n" +
-                            "Possible Errors:\n\n" +
+                            "\n"+
+                            "### Possible Errors:\n\n" +
                             "**401**: Missing or invalid token.\n" +
                             "\n" +
                             "**403**: User does not have permission to access this transaction.\n" +
