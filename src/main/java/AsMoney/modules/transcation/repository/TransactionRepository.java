@@ -2,6 +2,7 @@ package AsMoney.modules.transcation.repository;
 
 import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.enums.AmountType;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,14 +26,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             AND t.user.id = :userId
             """)
     Optional<Transaction> findByIdAndUserId(@Param("transactionId") UUID transactionId, @Param("userId") UUID userId);
-
-    @Query("""
-            SELECT t 
-            FROM Transaction t
-            JOIN t.user u
-            WHERE u.id = :userId    
-            """)
-    List<Transaction> findByUser(@Param("userId") UUID userId);
 
     @Query("""
             SELECT COALESCE(SUM(t.amount), 0)

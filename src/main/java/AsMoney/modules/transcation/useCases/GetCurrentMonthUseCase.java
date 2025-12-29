@@ -8,6 +8,7 @@ import AsMoney.modules.transcation.exceptions.UnauthorizedTransactionAccessExcep
 import AsMoney.modules.transcation.mapper.TransactionMapper;
 import AsMoney.modules.transcation.repository.TransactionRepository;
 import AsMoney.modules.user.useCases.GetUserOptionalByIdUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,16 +17,13 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class GetCurrentMonthUseCase {
 
     private final TransactionRepository transactionRepository;
     private final GetUserOptionalByIdUseCase getUserOptionalByIdUseCase;
 
-    public GetCurrentMonthUseCase(TransactionRepository transactionRepository, GetUserOptionalByIdUseCase getUserOptionalByIdUseCase) {
-        this.transactionRepository = transactionRepository;
-        this.getUserOptionalByIdUseCase = getUserOptionalByIdUseCase;
-    }
 
     public DashboardResponse execute(UUID userId) {
 
