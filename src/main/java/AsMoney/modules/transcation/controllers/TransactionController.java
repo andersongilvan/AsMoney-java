@@ -32,7 +32,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TransactionController {
 
-    private final FindTransactionsByUserUseCase findByUser;
     private final FindTransactionByIdUseCase findById;
 
 
@@ -41,32 +40,6 @@ public class TransactionController {
 
 
 
-
-
-    @GetMapping("/user")
-    public ResponseEntity<Object> getByUser(@AuthenticationPrincipal TokenData tokenData) {
-
-        UUID userId = UUID.fromString(tokenData.id());
-
-        List<Transaction> result = this.findByUser.execute(userId);
-
-        List<TransactionsResponse> transactionsResponses = result.stream()
-                .map(t -> TransactionMapper.toTransactionResponse(t)).toList();
-
-        return ResponseEntity.ok(transactionsResponses);
-    }
-
-    @GetMapping("/{transactionId}")
-    public ResponseEntity<Object> findById(@AuthenticationPrincipal TokenData tokenData,
-                                           @PathVariable UUID transactionId) {
-
-        UUID userId = UUID.fromString(tokenData.id());
-
-        Transaction result = this.findById.execute(transactionId, userId);
-
-        return ResponseEntity.ok(TransactionMapper.toTransactionResponse(result));
-
-    }
 
     @PutMapping("/{transactionId}")
     public ResponseEntity<Object> update(@AuthenticationPrincipal TokenData tokenData,

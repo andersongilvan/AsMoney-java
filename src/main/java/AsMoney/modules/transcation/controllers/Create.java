@@ -39,7 +39,16 @@ public class Create {
     @PostMapping
 
     @Operation(summary = "Create a Transaction",
-            description = "Create a new financial transaction for the user authenticated.")
+            description =
+                    "## Return Flow\n" +
+                            "Returns the details of a specific transaction.\n" +
+                            "\n**201:** Created\n" +
+                            "\nReturns the details of a specific transaction.\n" +
+                            "Possible Errors:\n\n" +
+                            "**401**: Missing or invalid token.\n" +
+                            "\n" +
+                            "**403**: Forbidden")
+
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses(value = {
 

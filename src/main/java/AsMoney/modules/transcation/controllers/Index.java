@@ -8,11 +8,14 @@ import AsMoney.modules.transcation.entiry.Transaction;
 import AsMoney.modules.transcation.mapper.TransactionMapper;
 import AsMoney.modules.transcation.useCases.GetCurrentMonthUseCase;
 import AsMoney.modules.transcation.useCases.GetTransactionsBetweenDatesUseCase;
+import AsMoney.swaggerResponse.RequiredToken;
+import AsMoney.swaggerResponse.Unauthorized;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,35 +40,48 @@ public class Index {
     @GetMapping("/dashboard")
 
     @Operation(summary = "User dashboard",
-            description = "Return dashboard of current month when not dates" +
-                    "When startDate and endDate specified, it return transactions for period."
+            description = "Return dashboard of current month when not dates " +
+                    "startDate and endDate specified, it return transactions for period."
     )
 
     @SecurityRequirement(name = "BearerAuth")
 
-    @ApiResponse(
-            responseCode = "200",
-            description = "OK",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(
-                            oneOf = {
-                                    DashboardResponse.class,
-                                    TransactionsResponse[].class
-                            }
+    @ApiResponses(
+            value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ok",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(
+                                    oneOf = {
+                                            DashboardResponse.class,
+                                            TransactionsResponse[].class
+                                    }
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RequiredToken.class)
+                    )
+            ),
+
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Unauthorized.class)
                     )
             )
-    )
+    })
 
-    @ApiResponse(
-            responseCode = "401",
-            description = "Token not found"
-    )
-
-    @ApiResponse(
-            responseCode = "401",
-            description = "Invalid or expired token"
-    )
 
     @Parameter(
             description = "Start date of period, format: (yyyy-MM-dd). Optional",
