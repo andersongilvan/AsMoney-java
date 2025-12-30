@@ -77,14 +77,13 @@ public class Create {
 
         UUID userId = UUID.fromString(tokenData.id());
 
-        Transaction transaction = TransactionMapper.toTransaction(requestDto, userId);
+        Transaction transaction = TransactionMapper.toTransaction(requestDto);
 
-        Transaction result = this.register.execute(transaction);
+        Transaction result = this.register.execute(transaction, userId);
 
         TransactionsResponse transactionsResponse = TransactionMapper.toTransactionResponse(result);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionsResponse);
-
 
     }
 

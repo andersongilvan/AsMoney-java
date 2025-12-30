@@ -20,9 +20,9 @@ public class RegisterTransactionUseCase {
     private final FindUserByIdUseCase findUserByIdUseCase;
 
     @Transactional
-    public Transaction execute(Transaction transaction) {
+    public Transaction execute(Transaction transaction, UUID userId) {
 
-        User user = this.findUserByIdUseCase.execute(transaction.getUser().getId());
+        User user = this.findUserByIdUseCase.execute(userId);
 
         transaction.setAmount(
                 transaction.getType().equals(AmountType.CREDIT)

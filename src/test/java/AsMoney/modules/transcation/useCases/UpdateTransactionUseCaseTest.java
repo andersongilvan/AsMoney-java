@@ -62,7 +62,7 @@ class UpdateTransactionUseCaseTest {
         Transaction updateData = new Transaction();
         updateData.setTitle("Title updated");
 
-        Transaction result = useCase.execute(userId, transactionId, updateData);
+        Transaction result = useCase.execute(transactionId, updateData, userId);
 
         Assertions.assertEquals("Title updated", result.getTitle());
 
@@ -78,7 +78,7 @@ class UpdateTransactionUseCaseTest {
         when(repository.findById(transactionId)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(TransactionNotFoundException.class,
-                () -> useCase.execute(userId, transactionId, transaction));
+                () -> useCase.execute(transactionId, transaction, userId));
 
         verify(repository).findById(transactionId);
         verify(repository, never()).save(any());
@@ -94,7 +94,7 @@ class UpdateTransactionUseCaseTest {
         when(repository.findById(transactionId)).thenReturn(Optional.of(transaction));
 
         Assertions.assertThrows(UnauthorizedTransactionAccessException.class,
-                () -> useCase.execute(userWrongId, transactionId, transaction));
+                () -> useCase.execute(transactionId, transaction, userWrongId));
 
         verify(repository).findById(transactionId);
         verify(repository, never()).save(any());

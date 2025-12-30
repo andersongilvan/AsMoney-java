@@ -97,10 +97,10 @@ class AuthUserUseCaseTest {
         when(passwordEncoder.matches(password, user.getPassword())).thenReturn(true);
         when(tokenService.generateToken(user)).thenReturn(tokenFake);
 
-        String result = useCase.execute(userRequest);
+        AuthUserResponse result = useCase.execute(userRequest);
 
         assertNotNull(result);
-        assertEquals(result, tokenFake);
+        assertEquals(result.token(), tokenFake);
 
         verify(repository).findByEmail(userRequest.email());
         verify(passwordEncoder).matches(userRequest.password(), user.getPassword());

@@ -31,10 +31,12 @@ class FindTransactionByIdUseCaseTest {
 
     UUID idTransaction;
     Transaction transaction;
+    UUID userId;
 
     @BeforeEach
     void setUp() {
         idTransaction = UUID.randomUUID();
+        userId = UUID.randomUUID();
         transaction = new Transaction();
     }
 
@@ -44,26 +46,26 @@ class FindTransactionByIdUseCaseTest {
 
         transaction.setId(idTransaction);
 
-        when(repository.findById(idTransaction)).thenReturn(Optional.of(transaction));
+        when(repository.findByIdAndUserId(idTransaction, userId)).thenReturn(Optional.of(transaction));
 
-        Transaction result = useCase.execute(idTransaction);
+        Transaction result = useCase.execute(idTransaction, userId);
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(idTransaction, result.getId());
 
-        verify(repository).findById(idTransaction);
+        verify(repository).findByIdAndUserId(idTransaction, userId);
     }
 
     @Test
     @DisplayName("should not be able find a transaction with wrong id")
     void shouldNotBeableFindTransactionWithWrongId() {
 
-        when(repository.findById(idTransaction)).thenReturn(Optional.empty());
-        
-        Assertions.assertThrows(TransactionNotFoundException.class,
-                () -> useCase.execute(idTransaction));
+        when(repository.findByIdAndUserId(idTransaction, userId)).thenReturn(Optional.empty());
 
-        verify(repository).findById(idTransaction);
+        Assertions.assertThrows(TransactionNotFoundException.class,
+                () -> useCase.execute(idTransaction, userId));
+
+        verify(repository).findByIdAndUserId(idTransaction, userId);
 
     }
 }

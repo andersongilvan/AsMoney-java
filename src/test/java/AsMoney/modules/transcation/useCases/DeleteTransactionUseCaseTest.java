@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +39,7 @@ class DeleteTransactionUseCaseTest {
 
         useCase.execute(userId, transactionId);
 
-        verify(repository).deleteById(userId, transactionId);
+        verify(repository).deleteByIdWhereUser(userId, transactionId);
 
     }
 

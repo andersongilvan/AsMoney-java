@@ -84,9 +84,9 @@ public class Update {
 
         UUID userId = UUID.fromString(tokenData.id());
 
-        Transaction transaction = TransactionMapper.toTransaction(updated, userId);
+        Transaction transaction = TransactionMapper.toTransaction(updated);
 
-        Transaction result = this.update.execute(transactionId, transaction);
+        Transaction result = this.update.execute(transactionId, transaction, userId);
 
         return ResponseEntity.ok(TransactionMapper.toTransactionResponse(result));
 
